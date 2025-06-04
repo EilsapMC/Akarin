@@ -1,0 +1,58 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MrHua269 <mrhua269@gmail.com>
+Date: Mon, 2 Jun 2025 12:33:06 +0800
+Subject: [PATCH] Akarin configuration
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 7c30289ff28c4f0b91597da9c4aa192e7ff559cc..e55572086b072cd8d1464628c2fbc388db0ac6a3 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1108,6 +1108,7 @@ public final class CraftServer implements Server {
+             this.logger.log(Level.WARNING, "Failed to load banned-players.json, " + ex.getMessage());
+         }
+ 
++        io.akarin.server.Config.init((File) console.options.valueOf("akarin-settings")); // Akarin - Server Config
+         org.spigotmc.SpigotConfig.init((File) this.console.options.valueOf("spigot-settings")); // Spigot
+         this.console.paperConfigurations.reloadConfigs(this.console);
+         for (ServerLevel world : this.console.getAllLevels()) {
+@@ -1124,6 +1125,7 @@ public final class CraftServer implements Server {
+                     }
+                 }
+             }
++            world.akarinConfig.init(); // Akarin - Server Config
+             world.spigotConfig.init(); // Spigot
+         }
+ 
+@@ -3342,4 +3344,11 @@ public final class CraftServer implements Server {
+         }
+     }
+     // Folia end - region TPS API
++    // Akarin Start - Server Config
++    @NotNull
++    public org.bukkit.configuration.file.YamlConfiguration getAkarinConfig()
++    {
++        return io.akarin.server.Config.config;
++    }
++    // Akarin End - Server Config
+ }
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index a11fc64b4933a5abce0182ba46f1da22043eb0d8..54e03d6c27020699315f19e3ec2b5b8a818460e9 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -170,6 +170,15 @@ public class Main {
+                         .ofType(String.class)
+                         .defaultsTo("Unknown Server")
+                         .describedAs("Name");
++
++                // Akarin Start - Server Config
++                acceptsAll(asList("akarin", "akarin-settings"), "File for Akarin settings")
++                        .withRequiredArg()
++                        .ofType(File.class)
++                        .defaultsTo(new File("akarin.yml"))
++                        .describedAs("Yml file");
++                // Akarin End - Server Config
++
+             }
+         };
+ 

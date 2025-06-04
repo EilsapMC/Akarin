@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MrHua269 <mrhua269@gmail.com>
+Date: Wed, 4 Jun 2025 18:52:31 +0800
+Subject: [PATCH] Akarin brand changes
+
+
+diff --git a/src/main/java/io/papermc/paper/ServerBuildInfo.java b/src/main/java/io/papermc/paper/ServerBuildInfo.java
+index 652ff54e7c50412503725d628bfe72ed03059790..ec7a410e2bd41408515ab7b3f7f74420683634f9 100644
+--- a/src/main/java/io/papermc/paper/ServerBuildInfo.java
++++ b/src/main/java/io/papermc/paper/ServerBuildInfo.java
+@@ -19,6 +19,17 @@ public interface ServerBuildInfo {
+      */
+     Key BRAND_PAPER_ID = Key.key("papermc", "paper");
+ 
++    // Akarin start
++    /**
++     * The brand id for Folia
++     */
++    Key BRAND_FOLIA_ID = Key.key("papermc", "folia");
++    /**
++     * The brand id for Akarin.
++     */
++    Key BRAND_AKARIN_ID = Key.key("akarinmc", "akarin");
++    // Akarin end
++
+     /**
+      * Gets the {@code ServerBuildInfo}.
+      *

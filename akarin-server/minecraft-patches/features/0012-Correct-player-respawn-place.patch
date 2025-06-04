@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Helvetica Volubi <suisuroru@blue-millennium.fun>
+Date: Sat, 26 Apr 2025 21:47:45 +0800
+Subject: [PATCH] Correct player respawn place
+
+
+diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
+index d2ab8110871ecf8af9d35f8b47f1d67888e15df3..3d734e49c9ffe8e436e0ae4818df6be3794a633f 100644
+--- a/net/minecraft/server/level/ServerPlayer.java
++++ b/net/minecraft/server/level/ServerPlayer.java
+@@ -490,8 +490,10 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+         double amountX = selectMaxX - selectMinX;
+         double amountZ = selectMaxZ - selectMinZ;
+ 
+-        int selectX = amountX < 1.0 ? Mth.floor(worldBorder.getCenterX()) : (int)Mth.floor((amountX + 1.0) * random.nextDouble() + selectMinX);
+-        int selectZ = amountZ < 1.0 ? Mth.floor(worldBorder.getCenterZ()) : (int)Mth.floor((amountZ + 1.0) * random.nextDouble() + selectMinZ);
++        // Akarin start - Correct player respawn place
++        int selectX = amountX < 0.0 ? Mth.floor(worldBorder.getCenterX()) : (int)Mth.floor(amountX * random.nextDouble() + selectMinX);
++        int selectZ = amountZ < 0.0 ? Mth.floor(worldBorder.getCenterZ()) : (int)Mth.floor(amountZ * random.nextDouble() + selectMinZ);
++        // Akarin end - Correct player respawn place
+ 
+         return new BlockPos(selectX, 0, selectZ);
+     }
+@@ -502,10 +504,20 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+     }
+ 
+     private static BlockPos findSpawnAround(ServerLevel world, ServerPlayer player, BlockPos selected) {
++        // Akarin start - Correct player respawn place
++        BlockPos inChunk;
++        inChunk = PlayerRespawnLogic.getOverworldRespawnPos(world, selected.getX(), selected.getZ());
++        if (inChunk != null) {
++            AABB checkVolume = player.getBoundingBoxAt((double)inChunk.getX() + 0.5, (double)inChunk.getY(), (double)inChunk.getZ() + 0.5);
++            if (player.noCollisionNoLiquid(world, checkVolume)) {
++                return inChunk;
++            }
++        }
++        // Akarin end - Correct player respawn place
+         // try hard to find, so that we don't attempt another chunk load
+         for (int dz = -SPAWN_RADIUS_SELECTION_SEARCH; dz <= SPAWN_RADIUS_SELECTION_SEARCH; ++dz) {
+             for (int dx = -SPAWN_RADIUS_SELECTION_SEARCH; dx <= SPAWN_RADIUS_SELECTION_SEARCH; ++dx) {
+-                BlockPos inChunk = PlayerRespawnLogic.getOverworldRespawnPos(world, selected.getX() + dx, selected.getZ() + dz);
++                inChunk = PlayerRespawnLogic.getOverworldRespawnPos(world, selected.getX() + dx, selected.getZ() + dz); // Akarin - Correct player respawn place
+                 if (inChunk == null) {
+                     continue;
+                 }

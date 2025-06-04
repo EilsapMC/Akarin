@@ -9,13 +9,13 @@ Introduction
 ---
 > Akarin is a powerful server software from the 'new dimension', formerly known as Torch. 
 
-As a [Paper](https://github.com/PaperMC/Paper) fork, it should support almost all plugins that work on [Spigot](https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/browse).
+As a [Folia](https://github.com/PaperMC/Folia) fork, it should support almost all plugins that work on [Folia](https://github.com/PaperMC/Folia).
 
 Our project has a few key goals:
 
 * **Open Access** - Make more game mechanics configurable. 
 * **Bedrock** - Make the server more safe and stable. 
-* **Fast** - Simplify the logic and implement multi-threaded computing.
+* **Fast** - With regionized threading passed down from [Folia](https://github.com/PaperMC/Folia).
 
 *Issues and Pull Requests will be labeled accordingly*
 
@@ -29,12 +29,12 @@ Get Akarin
 
 ### Build
 #### Requirements
-* Java (JDK) 8 or above
+* Java (JDK) 21 or above
 * Maven
 
 #### Compile
 ```sh
-./scripts/inst.sh --setup --fast
+./gradlew applyAllPatches
 ```
 
 **Notes**
@@ -51,7 +51,7 @@ Demo Servers
 
 Contributing
 ---
-* Akarin uses [Mixin](https://github.com/SpongePowered/Mixin) to modify the code. You can checkout the `sources` folder to see more. 
+* Akarin uses patches to handle code changes.
 * Add your name to the [LICENSE](https://github.com/Akarin-project/Akarin/blob/master/LICENSE.md) if you want to publish your code under the [MIT License](https://github.com/Akarin-project/Akarin/blob/master/licenses/MIT.md).
 * If you want to join the [Akarin-project](https://github.com/Akarin-project) team, you can [send](mailto://kira@kira.moe) us an email with your experience and necessary information.
 
