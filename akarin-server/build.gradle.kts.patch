@@ -1,0 +1,87 @@
+--- a/folia-server/build.gradle.kts
++++ b/folia-server/build.gradle.kts
+@@ -29,6 +_,7 @@
+     //}
+       
+     val fork = forks.register("folia") {
++        rootDirectory = upstreamsDirectory().map { it.dir("folia") }
+         upstream.patchDir("paperServer") {
+             upstreamPath = "paper-server"
+             excludes = setOf("src/minecraft", "patches", "build.gradle.kts")
+@@ -37,7 +_,23 @@
+         }
+     }
+ 
+-    activeFork = fork
++    val akarin = forks.register("akarin") {
++        forks = fork
++        upstream.patchRepo("paperServer") {
++            upstreamRepo = fork.patchedRepo("paperServer")
++            patchesDir = rootDirectory.dir("akarin-server/paper-patches")
++            outputDir = rootDirectory.dir("paper-server")
++        }
++
++        upstream.patchDir("foliaServer") {
++            upstreamPath = "folia-server"
++            excludes = setOf("src/minecraft", "paper-patches", "minecraft-patches", "build.gradle.kts", "build.gradle.kts.patch")
++            patchesDir = rootDirectory.dir("akarin-server/folia-patches")
++            outputDir = rootDirectory.dir("folia-server")
++        }
++    }
++
++    activeFork = akarin
+ 
+     spigot {
+         buildDataRef = "702e1a0a5072b2c4082371d5228cb30525687efc"
+@@ -123,10 +_,14 @@
+     main {
+         java { srcDir("../paper-server/src/main/java"); srcDir("../paper-server/src/generated/java") }
+         resources { srcDir("../paper-server/src/main/resources") }
++        java { srcDir("../folia-server/src/main/java") }
++        resources { srcDir("../folia-server/src/main/resources") }
+     }
+     test {
+         java { srcDir("../paper-server/src/test/java") }
+         resources { srcDir("../paper-server/src/test/resources") }
++        java { srcDir("../folia-server/src/test/java") }
++        resources { srcDir("../folia-server/src/test/resources") }
+     }
+ }
+ val log4jPlugins = sourceSets.create("log4jPlugins") {
+@@ -153,7 +_,7 @@
+ }
+ 
+ dependencies {
+-    implementation(project(":folia-api"))
++    implementation(project(":akarin-api")) // Akarin
+     implementation("ca.spottedleaf:concurrentutil:0.0.3")
+     implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
+     implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
+@@ -222,21 +_,21 @@
+         val git = Git(rootProject.layout.projectDirectory.path)
+         val mcVersion = rootProject.providers.gradleProperty("mcVersion").get()
+         val build = System.getenv("BUILD_NUMBER") ?: null
+-        val buildTime = if (build != null) Instant.now() else Instant.EPOCH
++        val buildTime = Instant.now() // Always use current as build time
+         val gitHash = git.exec(providers, "rev-parse", "--short=7", "HEAD").get().trim()
+         val implementationVersion = "$mcVersion-${build ?: "DEV"}-$gitHash"
+         val date = git.exec(providers, "show", "-s", "--format=%ci", gitHash).get().trim()
+         val gitBranch = git.exec(providers, "rev-parse", "--abbrev-ref", "HEAD").get().trim()
+         attributes(
+             "Main-Class" to "org.bukkit.craftbukkit.Main",
+-            "Implementation-Title" to "Folia",
++            "Implementation-Title" to "Akarin",
+             "Implementation-Version" to implementationVersion,
+             "Implementation-Vendor" to date,
+-            "Specification-Title" to "Folia",
++            "Specification-Title" to "Aakarin",
+             "Specification-Version" to project.version,
+-            "Specification-Vendor" to "Paper Team",
+-            "Brand-Id" to "papermc:folia",
+-            "Brand-Name" to "Folia",
++            "Specification-Vendor" to "Akarin Project",
++            "Brand-Id" to "akarinmc:akarin",
++            "Brand-Name" to "Akarin",
+             "Build-Number" to (build ?: ""),
+             "Build-Time" to buildTime.toString(),
+             "Git-Branch" to gitBranch,
