@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/src/main/java/io/akarin/server/Config.java
-@@ -1,0 +_,202 @@
+@@ -1,0 +_,208 @@
 +package io.akarin.server;
 +
 +import org.bukkit.Bukkit;
@@ -201,5 +201,11 @@
 +    private static void load_drop_off_tickregion_entity_ai_memory() {
 +        drop_off_tickregion_entity_ai_memory_typed_entity = getBoolean("fixes.folia.drop_off_tickregion_entity_ai_memory_typed_entity", drop_off_tickregion_entity_ai_memory_typed_entity);
 +        drop_off_tickregion_entity_ai_memory_typed_blockpos = getBoolean("fixes.folia.drop_off_tickregion_entity_ai_memory_typed_blockpos", drop_off_tickregion_entity_ai_memory_typed_blockpos);
++    }
++
++    public static boolean force_enable_unsafe_teleportation = false;
++
++    private static void load_force_enable_unsafe_teleportation() {
++        force_enable_unsafe_teleportation = getBoolean("tweaks.force_enable_unsafe_teleportation", force_enable_unsafe_teleportation);
 +    }
 +}
