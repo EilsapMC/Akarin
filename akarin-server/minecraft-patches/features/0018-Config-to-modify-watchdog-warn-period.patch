@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MrHua269 <mrhua269@gmail.com>
+Date: Fri, 6 Jun 2025 23:46:00 +0800
+Subject: [PATCH] Config to modify watchdog warn period
+
+
+diff --git a/io/papermc/paper/threadedregions/FoliaWatchdogThread.java b/io/papermc/paper/threadedregions/FoliaWatchdogThread.java
+index 258d82ab2c78482e1561343e8e1f81fc33f1895e..16d8c4fba94ec47a48e9b20ffd7db7d43d4a7ae7 100644
+--- a/io/papermc/paper/threadedregions/FoliaWatchdogThread.java
++++ b/io/papermc/paper/threadedregions/FoliaWatchdogThread.java
+@@ -65,7 +65,7 @@ public final class FoliaWatchdogThread extends Thread {
+ 
+             for (final RunningTick tick : ticks) {
+                 final long elapsed = now - tick.lastPrint;
+-                if (elapsed <= TimeUnit.SECONDS.toNanos(5L)) {
++                if (elapsed <= TimeUnit.MILLISECONDS.toNanos(io.akarin.server.Config.watchdog_warn_period)) { // Akarin - Add config for watchdog warn period
+                     continue;
+                 }
+                 tick.lastPrint = now;

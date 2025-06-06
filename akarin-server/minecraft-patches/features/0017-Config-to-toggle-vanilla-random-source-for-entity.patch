@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MrHua269 <mrhua269@gmail.com>
+Date: Fri, 6 Jun 2025 23:43:59 +0800
+Subject: [PATCH] Config to toggle vanilla random source for entity
+
+
+diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
+index 18813624a9abbca9a2d96d9b1589066566479469..9812d6f346f83be57b23a65aa5f88588d9ca3d04 100644
+--- a/net/minecraft/world/entity/Entity.java
++++ b/net/minecraft/world/entity/Entity.java
+@@ -261,7 +261,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+     public double yOld;
+     public double zOld;
+     public boolean noPhysics;
+-    public final RandomSource random = SHARED_RANDOM; // Paper - Share random for entities to make them more random
++    public final RandomSource random = io.akarin.server.Config.use_vanilla_random_for_entity ? RandomSource.create() : SHARED_RANDOM; // Paper - Share random for entities to make them more random // Akarin - Add config for vanilla random SHARED_RANDOM
+     public int tickCount;
+     private int remainingFireTicks = -this.getFireImmuneTicks();
+     public boolean wasTouchingWater;
